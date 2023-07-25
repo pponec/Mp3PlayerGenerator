@@ -1,22 +1,25 @@
 # Generated music player
 
-Listening to music, language courses, or other audio files?
-Then you might find a simple audio file player that is generated into an HTML file with your playlist.
-It has the advantage of easy portability between different operating systems (including Android) and can be uploaded to a web server naturally.
+Do you listen to music, language courses, or other audio files?
+You may find a simple audio player generated into a single HTML file useful.
+The advantage of such a player is the included playlist and easy portability between operating systems, so you can upload it to your mobile phone or tablet, for example.
+However, it is not a problem to upload it to a web server as well.
 
-To create the player, you will need Java 17+ and a script written in Java that runs (without prior compilation) in the music files directory (with the MP3 extension)
-by the command: `java Mp3PlayerGenerator.java`. 
-The player is generated in the `index.html` file.
-Operation is simple: open the file in your favorite HTML5 and Javascript-enabled web browser.
-You can then use the mouse to select the file to play and the space bar to pause or restart the playback.
-The playlist plays over and over again.
+The generator code is written in a single text file that runs with Java (version 17 or later) without the need for compilation.
+To listen music, all you need is a web browser with HTML 5 and Javascript support.
+The procedure for generating the HTML player is as follows:
 
-## Screenshot:
+1. Switch to the local directory with your `mp3` files.
+2. You download the source file [Mp3PlayerGenerator.java](https://raw.githubusercontent.com/pponec/Mp3PlayerGenerator/main/Mp3PlayerGenerator.java) to the local directory.
+3. Run the command: `java Mp3PlayerGenerator.java` from a command line. If the downloaded file is not in the current directory, you need to add the path to it.
+4. The music player will be generated to the `index.html` file.
+5. After opening the file in the web browser, select the required file from displayed playlist (by the mouse) a use the space bar to pause and resume.
+   The playlist plays over and over again.
 
 ![screenshot](./screenshot.png)
 
 ## More information:
 
-* License: Apache License, Version 2.0
 * Homepage: https://github.com/pponec/Mp3PlayerGenerator/
-
+* License: Apache License, Version 2.0
+* Original solution was written in the [Kotlin script](original).
