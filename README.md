@@ -10,7 +10,7 @@ To listen music, all you need is a web browser with HTML 5 and Javascript suppor
 The procedure for generating the HTML player is as follows:
 
 1. Switch to the local directory with your `mp3` files.
-2. You download the source file [Mp3PlayerGenerator.java](https://raw.githubusercontent.com/pponec/Mp3PlayerGenerator/main/Mp3PlayerGenerator.java) to the local directory.
+2. Download the source file [Mp3PlayerGenerator.java](https://raw.githubusercontent.com/pponec/Mp3PlayerGenerator/main/Mp3PlayerGenerator.java) to the local directory.
 3. Run the command: `java Mp3PlayerGenerator.java` from a command line. If the downloaded file is not in the current directory, you need to add the path to it.
 4. The music player will be generated to the `index.html` file.
 5. After opening the file in the web browser, select the required file from displayed playlist (by the mouse) a use the space bar to pause and resume.
