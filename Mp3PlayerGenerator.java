@@ -138,7 +138,8 @@ public class Mp3PlayerGenerator {
         });
         
         function updateCurrentSongText() {
-            currentSongElement.innerText = 'Now playing: ' + playlist[currentSongIndex];
+            var title = 'Now playing: '  + (currentSongIndex + 1) + ". file: " + playlist[currentSongIndex];
+            currentSongElement.innerText = title;
         }
         
         function updatePlaylistHighlight() {
