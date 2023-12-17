@@ -1,0 +1,160 @@
+# Generated code from Java class by GptChat.
+# Mp3PlayerGenerator
+# Home Page: https://github.com/pponec/Mp3PlayerGenerator/
+# License: Apache License, Version 2.0
+import os
+
+class Mp3PlayerGenerator:
+
+    def __init__(self):
+        self.homePage = "https://github.com/pponec/Mp3PlayerGenerator"
+        self.appName = self.__class__.__name__
+        self.appVersion = "1.3.1"
+        self.outputFile = "index.html"
+        self.locale = None  # Use default locale in Python
+        self.charset = "utf-8"
+
+    @staticmethod
+    def main():
+        o = Mp3PlayerGenerator()
+        if len(os.sys.argv) > 1:
+            o.print_help_and_exit()
+        mp3_list = o.get_sorted_mp3_files()
+        html = o.build_html_player(mp3_list)
+        with open(o.outputFile, "w", encoding=o.charset) as file:
+            file.write(html)
+
+    def print_help_and_exit(self):
+        print(f"Script '{self.appName}' v{self.appVersion} ({self.homePage})")
+        print(f"Usage version: {self.appName}")
+        os.sys.exit(1)
+
+    def build_html_player(self, mp3_list):
+        song_files = "\n\t, ".join([f'"{s}"' for s in mp3_list])
+        params = {
+            "song_files": song_files,
+            "title": self.get_current_directory_name(),
+            "charset": self.charset,
+            "app_name": self.appName,
+            "app_version": self.appVersion,
+            "home_page": self.homePage
+        }
+        return self.format_html_template(params)
+
+    def get_sorted_mp3_files(self):
+        files = [f.name for f in os.scandir('.') if f.is_file() and f.name.lower().endswith('.mp3')]
+        return sorted(files)
+
+    @staticmethod
+    def format_html_template(params):
+        return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{params['title']}</title>
+    <meta charset="{params['charset']}"/>
+    <meta name="generator" content="{params['app_name']} v{params['app_version']}, {params['home_page']}"/>
+    <style>
+        h1 {{
+            color: steelblue;
+        }}
+        #playlist li {{
+            cursor: pointer;
+        }}
+        #playlist li.current {{
+            font-weight: bold;
+        }}
+        #repeater {{
+            margin-left: 17px;
+        }}
+        #audioPlayer {{
+            width: 100%;
+            border: none;
+        }}
+        .footer, .footer a {{
+            margin-top: 30px;
+            margin-left: 7px;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: Gray;
+        }}
+    </style>
+</head>
+<body>
+    <h1>{params['title']}</h1>
+    <ol id="playlist"></ol>
+    <label id="repeater">File repeater:
+        <input type="checkbox"/>
+    </label>
+    <audio id="audioPlayer" controls></audio>
+    <p id="currentSong"></p>
+    <script>
+        var playlist = [ {params['song_files']} ];
+        var audioPlayer = document.getElementById('audioPlayer');
+        var playlistElement = document.getElementById('playlist');
+        var currentSongIndex = 0;
+        var currentSongElement = document.getElementById('currentSong');
+        var repeater = document.querySelector('#repeater input');
+
+        // Generate playlist:
+        playlist.forEach(function(song, index) {{
+            var listItem = document.createElement('li');
+            listItem.innerText = 'file: ' + playlist[index];
+            listItem.onclick = function() {{
+                playSong(index);
+                // Disable a scrolling to the audio player:
+                var currentPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                audioPlayer.focus();
+                window.scrollTo(0, currentPosition);
+            }};
+            playlistElement.appendChild(listItem);
+        }});
+
+        function playSong(index) {{
+            currentSongIndex = index;
+            var songUrl = playlist[index];
+            audioPlayer.src = encodeURI(songUrl);
+            audioPlayer.play();
+            updateCurrentSongText();
+            updatePlaylistHighlight();
+        }}
+
+        audioPlayer.addEventListener('ended', function() {{
+            if (!repeater.checked) {{
+                currentSongIndex = (currentSongIndex + 1) % playlist.length
+            }}
+            playSong(currentSongIndex);
+        }});
+
+        function updateCurrentSongText() {{
+            var title = 'Now playing '  + (currentSongIndex + 1) + ". file: " + playlist[currentSongIndex];
+            currentSongElement.innerText = title;
+        }}
+
+        function updatePlaylistHighlight() {{
+            var playlistItems = playlistElement.getElementsByTagName('li');
+            for (var i = 0; i < playlistItems.length; i++) {{
+                if (i === currentSongIndex) {{
+                    playlistItems[i].classList.add('current');
+                }} else {{
+                    playlistItems[i].classList.remove('current');
+                }}
+            }}
+        }}
+    </script>
+    <div class="footer">
+        Generated by the <a href="{params['home_page']}">{params['app_name']}</a> version {params['app_version']}.
+    </div>
+</body>
+</html>
+               """
+
+    def get_current_directory_name(self):
+        try:
+            return os.path.basename(os.path.abspath('.'))
+        except RuntimeError:
+            return "MP3 player"
+
+
+if __name__ == "__main__":
+    Mp3PlayerGenerator.main()
