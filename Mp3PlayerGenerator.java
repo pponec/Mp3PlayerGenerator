@@ -60,13 +60,14 @@ public class Mp3PlayerGenerator {
                 .filter(file -> file.isFile())
                 .filter(file -> file.getName().toLowerCase(locale).endsWith(".mp3"))
                 .map(file -> file.getName())
-                .sorted(Comparator.comparing(file -> removeDiacritics(file.toLowerCase(Locale.ENGLISH))))
+                .sorted(Comparator.comparing(file -> removeDiacritics(file)))
                 .toList();
     }
 
     /** Remove diacritics and some common separator characters. */
     String removeDiacritics(String input) {
-        var normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        var normalized = input.toLowerCase(Locale.ENGLISH);
+        normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         normalized = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         normalized = normalized.replaceAll("[\\-\\+\\.\\|:;,_/ ]+", " ");
         return normalized;
