@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class Mp3PlayerGenerator {
 
     private final String homePage = "https://github.com/pponec/Mp3PlayerGenerator";
     private final String appName = getClass().getName();
-    private final String appVersion = "1.3.1";
+    private final String appVersion = "1.3.2";
     private final String outputFile = "index.html";
     private final Locale locale = Locale.getDefault();
     private final Charset charset = StandardCharsets.UTF_8;
@@ -59,8 +60,13 @@ public class Mp3PlayerGenerator {
                 .filter(file -> file.isFile())
                 .filter(file -> file.getName().toLowerCase(locale).endsWith(".mp3"))
                 .map(file -> file.getName())
-                .sorted()
+                .sorted(Comparator.comparing(file -> removeDiacritics(file.toLowerCase(Locale.ENGLISH))))
                 .toList();
+    }
+
+    String removeDiacritics(String input) {
+        var normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     String htmlTemplate() {
