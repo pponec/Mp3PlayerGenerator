@@ -64,9 +64,12 @@ public class Mp3PlayerGenerator {
                 .toList();
     }
 
+    /** Remove diacritics and some common separator characters. */
     String removeDiacritics(String input) {
         var normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        normalized = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        normalized = normalized.replaceAll("[\\-\\+\\.\\|:;,_/ ]+", " ");
+        return normalized;
     }
 
     String htmlTemplate() {
