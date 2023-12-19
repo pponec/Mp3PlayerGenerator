@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Mp3PlayerGenerator {
@@ -26,7 +27,7 @@ public class Mp3PlayerGenerator {
         if (args.length > 0) {
             o.printHelpAndExit();
         }
-        var mp3List = o.getSortedMp3Files();
+        var mp3List = o.getSoundFilesSorted();
         var html = o.buildHtmlPlayer(mp3List);
         Files.writeString(Paths.get(o.outputFile), html, o.charset);
     }
@@ -51,15 +52,17 @@ public class Mp3PlayerGenerator {
         return format(htmlTemplate(), params);
     }
 
-    List<String> getSortedMp3Files() {
+    /** Return all 'mp3' and 'ogg' files. */
+    List<String> getSoundFilesSorted() {
         var files = new File(".").listFiles();
         if (files == null) {
             return Collections.emptyList();
         }
+        var filePattern = Pattern.compile("\\.(?i)(mp3|ogg)$");
         return Arrays.stream(files)
                 .filter(file -> file.isFile())
-                .filter(file -> file.getName().toLowerCase(locale).endsWith(".mp3"))
-                .map(file -> file.getName())
+                .map   (file -> file.getName())
+                .filter(file -> filePattern.matcher(file).find())
                 .sorted(Comparator.comparing(file -> removeDiacritics(file)))
                 .toList();
     }
